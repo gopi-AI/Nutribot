@@ -1,59 +1,61 @@
+"use client";
 import { useState } from "react";
 
-export default function Home() {
-  const [input, setInput] = useState("");
+export default function Chatbot() {
   const [messages, setMessages] = useState([]);
-  const [loading, setLoading] = useState(false);
+  const [input, setInput] = useState("");
 
-  const sendMessage = async (e) => {
-    e.preventDefault();
+  async function sendMessage() {
     if (!input.trim()) return;
 
-    const newMessages = [...messages, { role: "user", content: input }];
-    setMessages(newMessages);
+    const newMessage = { role: "user", content: input };
+    setMessages((prev) => [...prev, newMessage]);
+
     setInput("");
-    setLoading(true);
 
     try {
-      const res = await fetch("https://your-fastapi-backend-url/chat", {
+      const res = await fetch("https://your-fastapi-backend.onrender.com/chat", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ question: input })
+        body: JSON.stringify({ message: input }),
       });
 
       const data = await res.json();
-      setMessages([...newMessages, { role: "bot", content: data.answer }]);
+      const botMessage = { role: "bot", content: data.reply };
+
+      setMessages((prev) => [...prev, botMessage]);
     } catch (err) {
-      setMessages([...newMessages, { role: "bot", content: "Error connecting to server." }]);
-    } finally {
-      setLoading(false);
+      setMessages((prev) => [
+        ...prev,
+        { role: "bot", content: "Error connecting to server." },
+      ]);
     }
-  };
+  }
 
   return (
-    <div className="min-h-screen bg-gray-100 flex items-center justify-center p-6">
-      <div className="w-full max-w-2xl bg-white rounded-2xl shadow-lg p-6">
-        <h1 className="text-2xl font-bold mb-4 text-center">Nutrition Chatbot</h1>
-        <div className="h-80 overflow-y-auto border rounded-lg p-3 mb-4 bg-gray-50">
+    <div className="min-h-screen flex flex-col items-center justify-center bg-gray-100 p-4">
+      <div className="w-full max-w-md bg-white shadow-xl rounded-2xl p-4 flex flex-col space-y-4">
+        <div className="h-80 overflow-y-auto border p-2 rounded-lg bg-gray-50">
           {messages.map((m, i) => (
-            <div key={i} className={`mb-2 ${m.role === "user" ? "text-blue-600" : "text-green-600"}`}>
-              <b>{m.role === "user" ? "You:" : "Bot:"}</b> {m.content}
-            </div>
+            <p key={i} className={m.role === "user" ? "text-blue-600" : "text-green-600"}>
+              <b>{m.role}:</b> {m.content}
+            </p>
           ))}
-          {loading && <div className="text-gray-500">Bot is typing...</div>}
         </div>
-        <form onSubmit={sendMessage} className="flex">
+        <div className="flex space-x-2">
           <input
-            type="text"
-            className="flex-1 border rounded-l-lg px-3 py-2 focus:outline-none"
-            placeholder="Ask about diet..."
             value={input}
             onChange={(e) => setInput(e.target.value)}
+            className="flex-1 border rounded-lg p-2"
+            placeholder="Type a message..."
           />
-          <button type="submit" className="bg-blue-500 text-white px-4 py-2 rounded-r-lg hover:bg-blue-600">
+          <button
+            onClick={sendMessage}
+            className="bg-blue-500 text-white px-4 py-2 rounded-lg hover:bg-blue-600"
+          >
             Send
           </button>
-        </form>
+        </div>
       </div>
     </div>
   );
