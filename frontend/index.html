@@ -1,0 +1,67 @@
+<!doctype html>
+<html>
+<head>
+  <meta charset="utf-8"/>
+  <title>Nutrition Chatbot</title>
+  <meta name="viewport" content="width=device-width,initial-scale=1"/>
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+  <style>
+    .chatbox{position:fixed;right:20px;bottom:20px;width:360px;max-height:560px;background:#fff;border-radius:16px;box-shadow:0 8px 24px rgba(0,0,0,.15);display:flex;flex-direction:column;overflow:hidden}
+    .chat-header{background:#0d6efd;color:#fff;padding:10px 14px;font-weight:600}
+    .chat-body{padding:12px;overflow-y:auto;flex:1;background:#f8f9fa}
+    .msg{margin-bottom:10px}
+    .msg .bubble{padding:10px 12px;border-radius:14px;display:inline-block;white-space:pre-wrap}
+    .msg.user{text-align:right}
+    .msg.user .bubble{background:#0d6efd;color:#fff}
+    .msg.bot .bubble{background:#fff;border:1px solid #e5e7eb}
+    .chat-footer{padding:10px;border-top:1px solid #e5e7eb;background:#fff}
+  </style>
+</head>
+<body>
+<div class="chatbox">
+  <div class="chat-header">🥦 Nutrition Bot</div>
+  <div id="chat" class="chat-body"></div>
+  <div class="chat-footer">
+    <div class="input-group">
+      <input id="q" class="form-control" placeholder="Ask a diet question… (e.g., 70kg, diabetic, veg, 2000 kcal)">
+      <button class="btn btn-primary" id="send">Send</button>
+    </div>
+  </div>
+</div>
+
+<script>
+const API_BASE = (window.NETLIFY_ENV && window.NETLIFY_ENV.API_BASE) || "{{API_BASE}}"; // replaced by netlify.toml env
+
+const chat = document.getElementById('chat');
+const q = document.getElementById('q');
+document.getElementById('send').onclick = send;
+q.addEventListener('keydown', e => { if(e.key==='Enter') send(); });
+
+function addMsg(sender, text){
+  const div = document.createElement('div');
+  div.className = `msg ${sender}`;
+  div.innerHTML = `<div class="bubble">${text}</div>`;
+  chat.appendChild(div);
+  chat.scrollTop = chat.scrollHeight;
+}
+
+async function send(){
+  const text = q.value.trim();
+  if(!text) return;
+  addMsg('user', text);
+  q.value = '';
+  try{
+    const r = await fetch(`${API_BASE}/chat`, {
+      method:'POST',
+      headers:{'Content-Type':'application/json'},
+      body: JSON.stringify({query: text})
+    });
+    const data = await r.json();
+    addMsg('bot', data.answer || 'No answer');
+  }catch(e){
+    addMsg('bot', 'Error contacting server.');
+  }
+}
+</script>
+</body>
+</html>
