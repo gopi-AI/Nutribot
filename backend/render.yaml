@@ -1,0 +1,17 @@
+services:
+  - type: web
+    name: nutri-bot-backend
+    env: python
+    plan: free
+    buildCommand: pip install -r backend/requirements.txt
+    startCommand: uvicorn app.main:app --host 0.0.0.0 --port $PORT
+    autoDeploy: true
+    envVars:
+      - key: OPENAI_API_KEY
+        sync: false
+      - key: OPENAI_MODEL
+        value: gpt-4o-mini
+      - key: CORS_ORIGINS
+        value: "*"
+      - key: USDA_JSON_PATH
+        value: app/data/usda_sample.json

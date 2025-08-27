@@ -1,0 +1,35 @@
+
+:root{
+    --bg: #0f1220;
+    --card: #151a2e;
+    --accent: #6cf0ff;
+    --text: #e6ebff;
+    --muted: #9aa3b2;
+  }
+  body{ background: radial-gradient(1200px 800px at 70% -10%, #192142 0%, #0f1220 60%); color: var(--text); }
+  .container-narrow{ max-width: 860px; }
+  .app-card{ background: var(--card); border: 1px solid #20284b; border-radius: 18px; box-shadow: 0 2px 20px rgba(0,0,0,.35); }
+  .header{ font-weight:700; letter-spacing:.5px; }
+  
+  /* Chat bubbles */
+  .message{ padding: .75rem 1rem; border-radius: 16px; margin-bottom: .5rem; animation: rise .24s ease-out; }
+  .bot{ background: #1a2140; border: 1px solid #263165; align-self: flex-start; max-width: 85%; }
+  .user{ background: #0f6; color: #061; align-self: flex-end; max-width: 85%; }
+  
+  /* Typing dots */
+  .typing{ display:inline-flex; gap: 4px; }
+  .dot{ width: 6px; height: 6px; background: var(--muted); opacity:.6; border-radius:50%; animation: blink 1.2s infinite ease-in-out; }
+  .dot:nth-child(2){ animation-delay: .2s; }
+  .dot:nth-child(3){ animation-delay: .4s; }
+  @keyframes blink{ 0%,80%,100%{ transform: translateY(0);} 40%{ transform: translateY(-3px);} }
+  
+  /* Input bar */
+  .input-bar{ background: #121733; border: 1px solid #253066; border-radius: 14px; }
+  .input-bar input{ background: transparent; border: none; color: var(--text); }
+  .input-bar input:focus{ outline: none; box-shadow: none; }
+  
+  /* Nutrition cards */
+  .nutri-card{ background:#121733; border:1px solid #28356b; border-radius:16px; }
+  .nutri-badge{ background: #172045; border: 1px solid #2a3a78; color: var(--text); }
+  
+  @keyframes rise{ from{ opacity:0; transform: translateY(6px);} to{ opacity:1; transform: translateY(0);} }

@@ -1,0 +1,24 @@
+[
+    {
+      "food": "Apple, raw",
+      "per": { "quantity": 100, "unit": "g" },
+      "nutrients": {
+        "calories": 52,
+        "protein_g": 0.3,
+        "carbs_g": 14,
+        "fats_g": 0.2,
+        "micros": { "Vitamin C (mg)": 4.6, "Potassium (mg)": 107 }
+      }
+    },
+    {
+      "food": "Banana, raw",
+      "per": { "quantity": 100, "unit": "g" },
+      "nutrients": {
+        "calories": 89,
+        "protein_g": 1.1,
+        "carbs_g": 23,
+        "fats_g": 0.3,
+        "micros": { "Vitamin B6 (mg)": 0.37, "Potassium (mg)": 358 }
+      }
+    }
+  ]
